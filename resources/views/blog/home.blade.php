@@ -167,22 +167,7 @@ $(document).ready(function(){
       });
   });
   
-  $(".edit").click(function(){
-    var Item = $(this).data('id');
-    var url = "{{ url('blog') }}/" + Item + "edit";
-    var input = '<input name="_method" type="hidden" value="PUT">';
-      $.ajax({
-        type : 'GET',
-        url : url,
-        success: function(msg){
-            document.getElementById("blogForm").action= "{{url('blog/').'/'}}" + msg.id;
-            document.getElementById('blogForm').innerHTML += input;  
-            document.getElementsByName('fname')[0].value=msg.fname;
-            document.getElementsByName('lname')[0].value=msg.lname;
-            document.getElementsByName('address')[0].value=msg.address;          
-        }
-      });
-  });
+  
 
   var deleteItem= 0;
 

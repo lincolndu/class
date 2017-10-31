@@ -9,7 +9,6 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <title><?php echo e(config('app.name', 'Laravel')); ?></title>
-
     <!-- Styles -->
     <link href="<?php echo e(asset('css/app.css')); ?>" rel="stylesheet">
     <?php echo $__env->yieldContent('header'); ?>
@@ -49,6 +48,14 @@
                             <li><a href="<?php echo e(route('login')); ?>">Login</a></li>
                             <li><a href="<?php echo e(route('register')); ?>">Register</a></li>
                         <?php else: ?>
+                            <li><a href="<?php echo e(route('register')); ?>"> 
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                Shopping cart 
+                                <span class="badge">
+                                <?php echo e(Request::session()->get('cart')->qty); ?>
+
+                                </span>
+                            </a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <?php echo e(Auth::user()->name); ?> <span class="caret"></span>

@@ -18,6 +18,7 @@ class CreateBlogsTable extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('address');
+            $table->string('user_id');
             $table->timestamps();
         });
     }

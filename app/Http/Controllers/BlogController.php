@@ -7,6 +7,9 @@ use App\Models\Blog;
 
 class BlogController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -50,6 +53,7 @@ class BlogController extends Controller
     public function store(Blog $blog, Request $request)
     {
         $data= $request->all();
+        $data['user_id']= \Auth::id();
         $blog->create($data);
 
         return redirect()->back();

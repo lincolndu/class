@@ -19,24 +19,50 @@
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Address</th>
+                      <th>User</th>
                       <th>Create</th>
                       <th>Edit</th>                      
                       <th>Delete</th>
                    </thead>
                     <tbody>
 
+                    @if(isset($user))
+                    <h4>{{$user->name}}'s has below roles </h4>
+                    <ul>
+                      @foreach($user->roles as $role)
+                        <li>{{$role->name}}</li>
+                      @endforeach
+                    </ul>
+                    @foreach($user->blogs as $blog)
+                      <tr>
+                        <td><input type="checkbox" class="checkthis" /></td>
+                        <td>{{$blog->fname}}</td>
+                        <td>{{$blog->lname}}</td>
+                        <td>{{$blog->address}}</td>
+                        <td>{{$blog->user->name }}</td>
+                        
+                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="{{ $blog->id }}" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-eye-open"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs edit" data-id="{{ $blog->id }}" data-title="Edit" data-toggle="modal" data-target="#edit" data-id="2"><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs delete" data-id="{{ $blog->id }}" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+                      </tr>
+                    @endforeach  
+                    @endif
+
+                    @if(isset($blogs))
                     @foreach($blogs as $blog)
                       <tr>
                         <td><input type="checkbox" class="checkthis" /></td>
                         <td>{{$blog->fname}}</td>
                         <td>{{$blog->lname}}</td>
                         <td>{{$blog->address}}</td>
+                        <td>{{$blog->user->name }}</td>
                         
-                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="{{ $blog->id }}" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-plus"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="{{ $blog->id }}" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-eye-open"></span></button></p></td>
                         <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs edit" data-id="{{ $blog->id }}" data-title="Edit" data-toggle="modal" data-target="#edit" data-id="2"><span class="glyphicon glyphicon-pencil"></span></button></p></td>
                         <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs delete" data-id="{{ $blog->id }}" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
                       </tr>
                     @endforeach  
+                    @endif
 
                     </tbody>
                         
@@ -158,7 +184,7 @@ $(document).ready(function(){
     var url = "{{ url('blog') }}/" + Item;
       $.ajax({
         type : 'GET',
-        url : url,
+        url : "{{ url('blog') }}/" + Item,
         success: function(msg){
           $(".fname p").html(msg.fname);
           $(".lname p").html(msg.lname);
@@ -167,7 +193,22 @@ $(document).ready(function(){
       });
   });
   
-  
+  $(".edit").click(function(){
+    var Item = $(this).data('id');
+    var url = "{{ url('blog') }}/" + Item + "edit";
+    var input = '<input name="_method" type="hidden" value="PUT">';
+      $.ajax({
+        type : 'GET',
+        url : url,
+        success: function(msg){
+            document.getElementById("blogForm").action= "{{url('blog/').'/'}}" + msg.id;
+            document.getElementById('blogForm').innerHTML += input;  
+            document.getElementsByName('fname')[0].value=msg.fname;
+            document.getElementsByName('lname')[0].value=msg.lname;
+            document.getElementsByName('address')[0].value=msg.address;          
+        }
+      });
+  });
 
   var deleteItem= 0;
 

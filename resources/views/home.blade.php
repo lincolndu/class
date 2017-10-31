@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+
+<task></task>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -15,9 +18,12 @@
                     @endif
 
                     You are logged in!
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

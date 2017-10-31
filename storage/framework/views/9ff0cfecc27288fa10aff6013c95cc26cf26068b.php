@@ -17,24 +17,50 @@
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Address</th>
+                      <th>User</th>
                       <th>Create</th>
                       <th>Edit</th>                      
                       <th>Delete</th>
                    </thead>
                     <tbody>
 
+                    <?php if(isset($user)): ?>
+                    <h4><?php echo e($user->name); ?>'s has below roles </h4>
+                    <ul>
+                      <?php $__currentLoopData = $user->roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($role->name); ?></li>
+                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </ul>
+                    <?php $__currentLoopData = $user->blogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $blog): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <tr>
+                        <td><input type="checkbox" class="checkthis" /></td>
+                        <td><?php echo e($blog->fname); ?></td>
+                        <td><?php echo e($blog->lname); ?></td>
+                        <td><?php echo e($blog->address); ?></td>
+                        <td><?php echo e($blog->user->name); ?></td>
+                        
+                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="<?php echo e($blog->id); ?>" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-eye-open"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs edit" data-id="<?php echo e($blog->id); ?>" data-title="Edit" data-toggle="modal" data-target="#edit" data-id="2"><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs delete" data-id="<?php echo e($blog->id); ?>" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+                      </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>  
+                    <?php endif; ?>
+
+                    <?php if(isset($blogs)): ?>
                     <?php $__currentLoopData = $blogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $blog): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                       <tr>
                         <td><input type="checkbox" class="checkthis" /></td>
                         <td><?php echo e($blog->fname); ?></td>
                         <td><?php echo e($blog->lname); ?></td>
                         <td><?php echo e($blog->address); ?></td>
+                        <td><?php echo e($blog->user->name); ?></td>
                         
-                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="<?php echo e($blog->id); ?>" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-plus"></span></button></p></td>
+                        <td><p data-placement="top" data-toggle="tooltip" title="view"><button class="btn btn-primary btn-xs view" data-id="<?php echo e($blog->id); ?>" data-title="View" data-toggle="modal" data-target="#view" ><span class="glyphicon glyphicon-eye-open"></span></button></p></td>
                         <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs edit" data-id="<?php echo e($blog->id); ?>" data-title="Edit" data-toggle="modal" data-target="#edit" data-id="2"><span class="glyphicon glyphicon-pencil"></span></button></p></td>
                         <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs delete" data-id="<?php echo e($blog->id); ?>" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
                       </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>  
+                    <?php endif; ?>
 
                     </tbody>
                         
@@ -157,7 +183,7 @@ $(document).ready(function(){
     var url = "<?php echo e(url('blog')); ?>/" + Item;
       $.ajax({
         type : 'GET',
-        url : url,
+        url : "<?php echo e(url('blog')); ?>/" + Item,
         success: function(msg){
           $(".fname p").html(msg.fname);
           $(".lname p").html(msg.lname);
@@ -173,12 +199,9 @@ $(document).ready(function(){
       $.ajax({
         type : 'GET',
         url : url,
-        data: {
-          _method: 'PUT',
-          _token : "<?php echo e(csrf_token()); ?>"
-        },
         success: function(msg){
             document.getElementById("blogForm").action= "<?php echo e(url('blog/').'/'); ?>" + msg.id;
+            document.getElementById('blogForm').innerHTML += input;  
             document.getElementsByName('fname')[0].value=msg.fname;
             document.getElementsByName('lname')[0].value=msg.lname;
             document.getElementsByName('address')[0].value=msg.address;          

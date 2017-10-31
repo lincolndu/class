@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Blog extends Model
 {
@@ -12,7 +13,13 @@ class Blog extends Model
      * @var array
      */
     protected $fillable = [
-        'fname', 'lname', 'address',
+        'fname', 'lname', 'address','user_id',
     ];
+
+    public function user(){
+    	return $this->belongsTo(User::class);
+    }
+
+
     
 }
